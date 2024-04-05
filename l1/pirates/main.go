@@ -1,44 +1,48 @@
 package main
 
 import (
-	"bufio"
+	"encoding/json"
 	"fmt"
 	"math/rand"
 	"net"
 	"os"
 	"pirates/globals"
+	"strconv"
+	"sync"
 )
 
-func get_random_leter() string {
+// ===== Funciones Piratas =====
+func get_random_planet() string {
     random_leter := int(globals.Base_leter) + rand.Intn(globals.N_leters)
     return string(rune(random_leter))
 }
 
-// ===== Funciones Piratas =====
-func find_tresure(name string){ 
-    fmt.Printf("Capitan %s encontro botin en el planeta P%s, enviando solicitud de asignacion\n", name, get_random_leter())
+func find_tresure(wg *sync.WaitGroup) {
+	defer wg.Done()
+	c, err := net.Dial("tcp", ":8080")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
-    // Enviar solicitud a la central
-
-    // Esperar la wea
-
-    // Recibir cuanto tesoro le toco pal planeta
-}
-
-func sendMessage(conn net.Conn, mensaje string) {
-    fmt.Fprintf(conn, mensaje+"\n")
-
-}
-
-// recibirMensaje se encarga de leer y mostrar un mensaje del servidor.
-func getAnswer(conn net.Conn) {
-    respuesta, err := bufio.NewReader(conn).ReadString('\n')
-    if err != nil {
-        fmt.Println("Error al recibir mensaje:", err)
-        return
+    msg := globals.Message {
+        Tresure: rand.Intn(globals.Max_tresures),
+        Captain: "C" + strconv.Itoa(rand.Intn(3) + 1),
+        Planet: get_random_planet(),
     }
 
-    fmt.Print("Mensaje del servidor: ", respuesta)
+    jsonData, err := json.Marshal(msg)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    fmt.Printf("[Capitan]: Capitan %s encontro un botin de %d en el Planeta P%s, enviando solicitud de asignacion\n", msg.Captain, msg.Tresure, msg.Planet)
+
+	_, err = c.Write(jsonData)
+    if err != nil {
+        fmt.Println(err)
+    }
+	c.Close()
 }
 
 func main(){
@@ -50,18 +54,12 @@ func main(){
     }
     defer conn.Close()
 
+    var wg sync.WaitGroup
+    wg.Add(globals.Task_counter)
 
-    for i:=0; i<2; i++ {
-        // Enviar un mensaje al servidor
-        sendMessage(conn, "Mensaje")
-
-        // Leer la respuesta del servidor
-        getAnswer(conn)
+    for i:=0; i<globals.Task_counter; i++ {
+        go find_tresure(&wg)
     }
-    // Enviar un mensaje al servidor
-
-
-    // Leer la respuesta del servidor
-
-    find_tresure("Pedro")
+    wg.Wait()
+    fmt.Println("[Capitan]: Los capitanes dejaron de buscar botines")
 }
