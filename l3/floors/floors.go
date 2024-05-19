@@ -59,11 +59,7 @@ func (s *Server) MercenaryReady(ctx context.Context, request *ReadyRequest) (*Re
 }
 
 // ================== Piso 1 ==================
-func (s *Server) Floor1(ctx context.Context, request *Floor1WeaponsRequest) (*Floor1WeaponsAnswer, error) {
-	return &Floor1WeaponsAnswer{Options: []string{"Escopeta", "Rifle automático", "Puños eléctricos"}}, nil
-}
-
-func (s *Server) Floor1Results(ctx context.Context, request *Floor1ResultsRequest) (*Floor1ResultsAnswer, error) {
+func (s *Server) Floor1(ctx context.Context, request *Floor1ResultsRequest) (*Floor1ResultsAnswer, error) {
     s.waitMercenaries(int(request.Id), 1)
 
 	// Aqui agregar la wea de las probabilidades

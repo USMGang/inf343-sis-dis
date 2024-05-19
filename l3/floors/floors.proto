@@ -15,14 +15,6 @@ message ReadyAnswer {
     bool continue = 2;
 }
 
-message Floor1WeaponsRequest {
-    repeated string options = 1;
-}
-
-message Floor1WeaponsAnswer {
-    repeated string options = 1;
-}
-
 message Floor1ResultsRequest {
     int32 id = 1;
     int32 selected_weapon = 2;
@@ -61,17 +53,11 @@ message Floor3ResultsAnswer {
     bool is_dead = 2;
 }
 
-// message QuitMessage {
-//     string message = 1;
-// }
-
 service FloorsService {
     rpc StartMission(Start) returns (Start) {}
     rpc MercenaryReady(ReadyRequest) returns (ReadyAnswer) {}
-    rpc Floor1(Floor1WeaponsRequest) returns (Floor1WeaponsAnswer) {}
-    rpc Floor1Results(Floor1ResultsRequest) returns (Floor1ResultsAnswer) {}
+    rpc Floor1(Floor1ResultsRequest) returns (Floor1ResultsAnswer) {}
     rpc Floor2(Floor2PathRequest) returns (Floor2PathAnswer) {}
     rpc Floor3(Floor3Try) returns (Floor3Try) {}
     rpc Floor3Results(Floor3ResultsRequest) returns (Floor3ResultsAnswer) {}
-    // rpc EndServer(QuitMessage) returns (QuitMessage) {}
 }

@@ -11,6 +11,9 @@ const (
 var (
     VOID_PROMPT = " "
     VOID_OPTIONS = []string{}
+
+    INTERFACE_PROMPT = "Seleccione una de las opciones: "
+    INTERFACE_OPTIONS = []string{ "Escribir resupesta", "Mercenarios", "Historial" }
 )
 
 func FailOnError(err error, msg string) {

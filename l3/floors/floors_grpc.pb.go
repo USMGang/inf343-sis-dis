@@ -24,8 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type FloorsServiceClient interface {
 	StartMission(ctx context.Context, in *Start, opts ...grpc.CallOption) (*Start, error)
 	MercenaryReady(ctx context.Context, in *ReadyRequest, opts ...grpc.CallOption) (*ReadyAnswer, error)
-	Floor1(ctx context.Context, in *Floor1WeaponsRequest, opts ...grpc.CallOption) (*Floor1WeaponsAnswer, error)
-	Floor1Results(ctx context.Context, in *Floor1ResultsRequest, opts ...grpc.CallOption) (*Floor1ResultsAnswer, error)
+	Floor1(ctx context.Context, in *Floor1ResultsRequest, opts ...grpc.CallOption) (*Floor1ResultsAnswer, error)
 	Floor2(ctx context.Context, in *Floor2PathRequest, opts ...grpc.CallOption) (*Floor2PathAnswer, error)
 	Floor3(ctx context.Context, in *Floor3Try, opts ...grpc.CallOption) (*Floor3Try, error)
 	Floor3Results(ctx context.Context, in *Floor3ResultsRequest, opts ...grpc.CallOption) (*Floor3ResultsAnswer, error)
@@ -57,18 +56,9 @@ func (c *floorsServiceClient) MercenaryReady(ctx context.Context, in *ReadyReque
 	return out, nil
 }
 
-func (c *floorsServiceClient) Floor1(ctx context.Context, in *Floor1WeaponsRequest, opts ...grpc.CallOption) (*Floor1WeaponsAnswer, error) {
-	out := new(Floor1WeaponsAnswer)
-	err := c.cc.Invoke(ctx, "/floors.FloorsService/Floor1", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *floorsServiceClient) Floor1Results(ctx context.Context, in *Floor1ResultsRequest, opts ...grpc.CallOption) (*Floor1ResultsAnswer, error) {
+func (c *floorsServiceClient) Floor1(ctx context.Context, in *Floor1ResultsRequest, opts ...grpc.CallOption) (*Floor1ResultsAnswer, error) {
 	out := new(Floor1ResultsAnswer)
-	err := c.cc.Invoke(ctx, "/floors.FloorsService/Floor1Results", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/floors.FloorsService/Floor1", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -108,8 +98,7 @@ func (c *floorsServiceClient) Floor3Results(ctx context.Context, in *Floor3Resul
 type FloorsServiceServer interface {
 	StartMission(context.Context, *Start) (*Start, error)
 	MercenaryReady(context.Context, *ReadyRequest) (*ReadyAnswer, error)
-	Floor1(context.Context, *Floor1WeaponsRequest) (*Floor1WeaponsAnswer, error)
-	Floor1Results(context.Context, *Floor1ResultsRequest) (*Floor1ResultsAnswer, error)
+	Floor1(context.Context, *Floor1ResultsRequest) (*Floor1ResultsAnswer, error)
 	Floor2(context.Context, *Floor2PathRequest) (*Floor2PathAnswer, error)
 	Floor3(context.Context, *Floor3Try) (*Floor3Try, error)
 	Floor3Results(context.Context, *Floor3ResultsRequest) (*Floor3ResultsAnswer, error)
@@ -126,11 +115,8 @@ func (UnimplementedFloorsServiceServer) StartMission(context.Context, *Start) (*
 func (UnimplementedFloorsServiceServer) MercenaryReady(context.Context, *ReadyRequest) (*ReadyAnswer, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MercenaryReady not implemented")
 }
-func (UnimplementedFloorsServiceServer) Floor1(context.Context, *Floor1WeaponsRequest) (*Floor1WeaponsAnswer, error) {
+func (UnimplementedFloorsServiceServer) Floor1(context.Context, *Floor1ResultsRequest) (*Floor1ResultsAnswer, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Floor1 not implemented")
-}
-func (UnimplementedFloorsServiceServer) Floor1Results(context.Context, *Floor1ResultsRequest) (*Floor1ResultsAnswer, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Floor1Results not implemented")
 }
 func (UnimplementedFloorsServiceServer) Floor2(context.Context, *Floor2PathRequest) (*Floor2PathAnswer, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Floor2 not implemented")
@@ -191,7 +177,7 @@ func _FloorsService_MercenaryReady_Handler(srv interface{}, ctx context.Context,
 }
 
 func _FloorsService_Floor1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Floor1WeaponsRequest)
+	in := new(Floor1ResultsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -203,25 +189,7 @@ func _FloorsService_Floor1_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/floors.FloorsService/Floor1",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FloorsServiceServer).Floor1(ctx, req.(*Floor1WeaponsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _FloorsService_Floor1Results_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Floor1ResultsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FloorsServiceServer).Floor1Results(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/floors.FloorsService/Floor1Results",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FloorsServiceServer).Floor1Results(ctx, req.(*Floor1ResultsRequest))
+		return srv.(FloorsServiceServer).Floor1(ctx, req.(*Floor1ResultsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -298,10 +266,6 @@ var FloorsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Floor1",
 			Handler:    _FloorsService_Floor1_Handler,
-		},
-		{
-			MethodName: "Floor1Results",
-			Handler:    _FloorsService_Floor1Results_Handler,
 		},
 		{
 			MethodName: "Floor2",
