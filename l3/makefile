@@ -24,9 +24,15 @@ player: build
 bot: build
 	./$(BIN_FOLDER)/mercenary 0
 
-director: build
-	docker start rabbitmq
-	./$(BIN_FOLDER)/director $(N)
+# director: build
+# 	docker start rabbitmq
+# 	./$(BIN_FOLDER)/director $(N)
+
+build_director:
+	docker compose build director
+
+director: build_director
+	docker compose up director
 
 doshbank: build
 	docker start rabbitmq
@@ -42,6 +48,7 @@ install_rabbit:
 	docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 
 clear:
+	rm -rf bin/*
 	rm -rf txt/*.txt
 	rm -rf txt/**/*.txt
 	./bots.sh -1
