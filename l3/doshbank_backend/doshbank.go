@@ -1,32 +1,46 @@
-package doshbank
+package doshbank_backend
 
 import (
-	"encoding/json"
 	"fmt"
 	g "l3/globals"
+	u "l3/ui"
+	sync "sync"
+
+	"encoding/json"
 
 	amqp "github.com/streadway/amqp"
+	"golang.org/x/net/context"
 )
 
 type DoshBank struct {
-    // --- General ---
-    Reward int
+	// --- General ---
+	Reward int
+	Ui     u.UI
 
-    // --- RabbitMQ ---
-	Ch     *amqp.Channel
-	Conn   *amqp.Connection
-	q      amqp.Queue
-	msgs   <-chan amqp.Delivery
+	// --- RabbitMQ ---
+	Ch   *amqp.Channel
+	Conn *amqp.Connection
+	q    amqp.Queue
+	msgs <-chan amqp.Delivery
+	mu   sync.Mutex
 
-    // --- gRPC ---
+	// --- gRPC ---
+    UnimplementedDoshBankServer
 }
 
 type Signal struct {
-	Id     int `json:"id"`
-	Floor  int `json:"floor"`
+	Id    int `json:"id"`
+	Floor int `json:"floor"`
 }
 
-func (d *DoshBank) InitDoshBank() { 
+
+// ================== gRPC ==================
+func (s *DoshBank) GetCurrentReward(ctx context.Context, request *GetCurrentRewardRequest) (*GetCurrentRewardResponse, error) {
+    return &GetCurrentRewardResponse{Reward: int32(s.Reward)}, nil
+}
+
+// ================== RabbitMQ ==================
+func (d *DoshBank) InitDoshBank() {
 	var err error
 	d.Conn, err = amqp.Dial("amqp://guest:guest@localhost:5672/")
 	g.FailOnError(err, "Error al conectar con RabbitMQ")
@@ -62,7 +76,7 @@ func (d *DoshBank) Publish(id int, floor int) {
 	g.FailOnError(err, "Error al publicar un mensaje")
 }
 
-func (d *DoshBank) Consume(){
+func (d *DoshBank) Consume() {
 	var err error
 	d.msgs, err = d.Ch.Consume(
 		d.q.Name, // queue
@@ -77,14 +91,16 @@ func (d *DoshBank) Consume(){
 }
 
 func (d *DoshBank) HandleDeadMercenary() {
-    for s := range d.msgs {
-        var signal Signal
-        err := json.Unmarshal(s.Body, &signal)
-        g.FailOnError(err, "Error al transformar el mensaje a JSON")
+	for s := range d.msgs {
+		var signal Signal
+		err := json.Unmarshal(s.Body, &signal)
+		g.FailOnError(err, "Error al transformar el mensaje a JSON")
 
-        d.Reward += g.REWARD_BONUS
-        fmt.Printf("Signal received: %v - %d\n", signal, d.Reward)
+        d.mu.Lock()
+		d.Reward += g.REWARD_BONUS
+        d.Ui.AddNotification(fmt.Sprintf("Mercenario %d ha muerto en el piso %d - Botin actual: %d", signal.Id, signal.Floor, d.Reward))
+        d.mu.Unlock()
 
-        // TODO: Crear el archivo con los datos de signal y la reward
-    }
+		// TODO: Crear el archivo con los datos de signal y la reward
+	}
 }

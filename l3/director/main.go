@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -8,11 +9,13 @@ import (
 	"strconv"
 	"sync"
 
+	dosh "l3/doshbank_backend"
 	f "l3/floors"
 	u "l3/ui"
-    dosh "l3/doshbank_backend"
+    g "l3/globals"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 const (
@@ -33,8 +36,14 @@ func main(){
         log.Fatalf("Fallo al escuchar el puerto 8080: %v", err)
     }
 
+    conn, err := grpc.Dial(":8081", grpc.WithTransportCredentials(insecure.NewCredentials()))
+    g.FailOnError(err, "Error, no se pudo establecer comunicación con el director")
+
+    c := dosh.NewDoshBankClient(conn)
+
     // Inicializar el server 
     s := f.Server{}
+
     s.NMercenaries = N_MERCENARIES
     s.CurrentMercenaries = 0
     s.Cond = sync.NewCond(&s.Mutex)
@@ -82,7 +91,11 @@ func main(){
 
             // Mercenarios
             case 2:
-                s.Ui.ShowNotifications()
+                request_reward := dosh.GetCurrentRewardRequest{}
+                response_reward, err := c.GetCurrentReward(context.Background(), &request_reward)
+                g.FailOnError(err, "Error, no se pudieron recibir las opciones")
+
+                s.Ui.AddNotification(fmt.Sprintf("[Director] Recompensa actual: %d", response_reward.Reward))
 
             // Historial
             case 3:

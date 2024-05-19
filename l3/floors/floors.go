@@ -3,9 +3,9 @@ package floors
 import (
 	"fmt"
 	u "l3/ui"
+    dosh "l3/doshbank_backend"
 	"math/rand"
 	"sync"
-    dosh "l3/doshbank_backend"
 
 	"golang.org/x/net/context"
 )

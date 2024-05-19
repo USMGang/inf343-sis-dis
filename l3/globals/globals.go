@@ -8,6 +8,11 @@ const (
     REWARD_BONUS = 100000000
 )
 
+var (
+    VOID_PROMPT = " "
+    VOID_OPTIONS = []string{}
+)
+
 func FailOnError(err error, msg string) {
 	if err != nil {
 		log.Fatalf("%s: %s", msg, err)

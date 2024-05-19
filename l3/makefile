@@ -31,6 +31,9 @@ test3:
 proto:
 	protoc -I=. --go_out=. --go-grpc_out=. floors/floors.proto
 
+proto2:
+	protoc -I=. --go_out=. --go-grpc_out=. doshbank_backend/doshbank.proto
+
 # docker: proto
 # 	sudo docker build -t lab2_super_tierra .
 #

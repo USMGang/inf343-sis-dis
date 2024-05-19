@@ -20,12 +20,17 @@ if [ "$nPlayers" -eq -1 ]; then
     done
 
     tmux kill-window -t $CURRENT_SESSION:"director"
+    tmux kill-window -t $CURRENT_SESSION:"doshbank"
     exit 0
 fi
 
 WINDOWS_NAME="director"
 tmux new-window -t $CURRENT_SESSION -n $WINDOWS_NAME -c $DIR -S
 tmux send-keys -t $CURRENT_SESSION:$WINDOWS_NAME "go run director/main.go $nMercenaries" C-m
+
+WINDOWS_NAME="doshbank"
+tmux new-window -t $CURRENT_SESSION -n $WINDOWS_NAME -c $DIR -S
+tmux send-keys -t $CURRENT_SESSION:$WINDOWS_NAME "go run doshbank/main.go" C-m
 
 sleep 1
 
