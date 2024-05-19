@@ -8,7 +8,6 @@ import (
 )
 
 var (
-    id = 0
     // name = ""
     choice = 0
     is_dead = make(chan bool)
@@ -32,10 +31,10 @@ func main() {
     server.setPlayer(player)
 
     // Dejar la señal para cuando el mercenario muera
-    go death()
+    go Death()
 
 	// ================== Interfaz ==================
-	showInterface(player)
+	ShowInterface(player)
 
 	// ================== Preparacion ==================
     server.startMission()

@@ -12,7 +12,7 @@ func getBotChoice(n_options int) (int) {
 }
 
 // ================== Interfaz ==================
-func showInterface(player int){
+func ShowInterface(player int){
     notifications.InitUserChoice()
     notifications.InitInterfaceChoice()
 

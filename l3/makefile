@@ -1,8 +1,11 @@
-client:
-	go run mercenary/main.go 1
+build_mercenary:
+	go build -o mercenary/mercenary mercenary/main.go mercenary/floors.go mercenary/interface.go
 
-bot:
-	go run mercenary/main.go 0
+player: build_mercenary
+	./mercenary/mercenary 1
+
+bot: build_mercenary
+	./mercenary/mercenary 0
 
 server:
 	go run director/main.go 1

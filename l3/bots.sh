@@ -39,7 +39,7 @@ for (( i=1; i<=$nPlayers; i++ ))
 do
     WINDOWS_NAME="player_$i"
     tmux new-window -t $CURRENT_SESSION -n $WINDOWS_NAME -c $DIR -S
-    tmux send-keys -t $CURRENT_SESSION:$WINDOWS_NAME "go run mercenary/main.go 1" C-m
+    tmux send-keys -t $CURRENT_SESSION:$WINDOWS_NAME "make player" C-m
 done
 
 # Crear los bots
@@ -47,6 +47,6 @@ for (( i=1; i<=$nBots; i++ ))
 do
     WINDOWS_NAME="bot_$i"
     tmux new-window -t $CURRENT_SESSION -n $WINDOWS_NAME -c $DIR -S
-    tmux send-keys -t $CURRENT_SESSION:$WINDOWS_NAME "go run mercenary/main.go 0" C-m
+    tmux send-keys -t $CURRENT_SESSION:$WINDOWS_NAME "make bot" C-m
 done
 
