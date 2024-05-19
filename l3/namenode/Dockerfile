@@ -5,13 +5,13 @@ WORKDIR /app
 COPY .. .
 
 RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o namenode namenode/main.go namenode/server.go namenode/interface.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server namenode/main.go namenode/server.go namenode/interface.go
 	
 ENV GOPATH=/app
 
 FROM scratch
 
-COPY --from=builder /app/namenode /namenode
+COPY --from=builder /app/server /server
 
 
-CMD ["/namenode", "8"]
+CMD ["/server", "8"]
