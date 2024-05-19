@@ -1,0 +1,19 @@
+#!/bin/bash
+
+n=$1
+DIR="$HOME/code/usm/inf343-sis-dis/l3"
+CURRENT_SESSION=$(tmux display-message -p '#S')
+
+if [ "$n" -eq -1 ]; then
+    tmux list-windows -t $CURRENT_SESSION -F "#{window_name}" | grep -i "bot" | while read -r WINDOW_NAME
+    do
+        tmux kill-window -t $CURRENT_SESSION:"$WINDOW_NAME"
+    done
+fi
+
+for (( i=1; i<=$n; i++ ))
+do
+    WINDOWS_NAME="bot_$i"
+    tmux new-window -t $CURRENT_SESSION -n $WINDOWS_NAME -c $DIR -k
+    tmux send-keys -t $CURRENT_SESSION:$WINDOWS_NAME "go run mercenary/main.go 0" C-m
+done
