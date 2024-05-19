@@ -9,7 +9,7 @@ services:
     ports:
       - '${DIRECTOR_PORT}:${DIRECTOR_PORT}'
     env_file:
-      - .env
+      - ./.env
     networks:
       - mynetwork
 
@@ -21,7 +21,7 @@ services:
     ports:
       - '${DOSHBANK_PORT}:${DOSHBANK_PORT}'
     env_file:
-      - .env
+      - ./.env
     networks:
       - mynetwork
 
