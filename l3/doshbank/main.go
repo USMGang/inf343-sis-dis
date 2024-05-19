@@ -20,7 +20,7 @@ func main(){
 
     go dosh.HandleDeadMercenary()
 
-    dosh.Ui = u.NewUI(g.WIDTH, g.N_NOTIFICATIONS)
+    dosh.Ui = u.NewUI(g.N_NOTIFICATIONS)
     dosh.Ui.ChangeOptions(g.VOID_PROMPT, g.VOID_OPTIONS)
     dosh.Ui.AddNotification("[DoshBank] Iniciando el doshbank...")
 

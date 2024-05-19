@@ -1,3 +1,5 @@
+N ?= 8
+
 build_mercenary:
 	go build -o mercenary/mercenary mercenary/main.go mercenary/floors.go mercenary/interface.go
 
@@ -7,8 +9,13 @@ player: build_mercenary
 bot: build_mercenary
 	./mercenary/mercenary 0
 
-server:
-	go run director/main.go 1
+build_director:
+	cd director
+	go build -o director
+
+director:
+	docker start rabbitmq
+	./director/director $(N_MERCENARIES)
 
 doshbank:
 	go run doshbank/main.go

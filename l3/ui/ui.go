@@ -10,10 +10,11 @@ import (
 	"strings"
 	"sync"
 	"unicode/utf8"
+    g "l3/globals"
 )
 
 type UI struct {
-	width             int
+	Width             int
 	maxNotifications  int
 	notifications     []string
 	visibleNotifications []string
@@ -36,14 +37,15 @@ type UI struct {
 }
 
 // ========= Constructor ==========
-func NewUI(width int, maxNotifications int) UI {
+func NewUI(maxNotifications int) UI {
     separator := fmt.Sprintf("%s%s%s", 
         strings.Repeat(string(" "), 2), 
-        strings.Repeat(string("="), width-2-2-2), 
+        strings.Repeat(string("="), g.WIDTH-2-2-2), 
         strings.Repeat(string(" "), 2), 
     )
+
 	return UI{
-		width:             width,
+		Width:             150,
         prompt:            "",
 		options:           []string{},
 		maxNotifications:  maxNotifications,
@@ -136,7 +138,7 @@ func (u *UI) PrintNotifications(height int, notifications []string) {
 	clearScreen()
 
 	// Printear la parte superior
-	fmt.Printf("%s%s%s\n", string(u.topLeft), strings.Repeat(string(u.horizontal), u.width-2), string(u.topRight))
+	fmt.Printf("%s%s%s\n", string(u.topLeft), strings.Repeat(string(u.horizontal), u.Width-2), string(u.topRight))
 
 	// Printear las notificaciones
 	nNotifications := len(notifications)
@@ -146,19 +148,19 @@ func (u *UI) PrintNotifications(height int, notifications []string) {
 		fmt.Print(string(u.vertical))
 		if nMessage != 0 {
 			fmt.Print(notifications[i])
-			fmt.Printf("%s", strings.Repeat(" ", u.width-2-nMessage))
+			fmt.Printf("%s", strings.Repeat(" ", u.Width-2-nMessage))
 		} else {
-			fmt.Printf("%s", strings.Repeat(" ", u.width-2))
+			fmt.Printf("%s", strings.Repeat(" ", u.Width-2))
 		}
 		fmt.Println(string(u.vertical))
 	}
 
 	for i := 0; i < height-2-nNotifications; i++ {
-		fmt.Printf("%s%s%s\n", string(u.vertical), strings.Repeat(" ", u.width-2), string(u.vertical))
+		fmt.Printf("%s%s%s\n", string(u.vertical), strings.Repeat(" ", u.Width-2), string(u.vertical))
 	}
 
 	// Printear la parte inferior
-	fmt.Printf("%s%s%s\n", string(u.bottomLeft), strings.Repeat(string(u.horizontal), u.width-2), string(u.bottomRight))
+	fmt.Printf("%s%s%s\n", string(u.bottomLeft), strings.Repeat(string(u.horizontal), u.Width-2), string(u.bottomRight))
 }
 
 func (u *UI) ChangeOptions(prompt string, options []string) {
@@ -185,7 +187,3 @@ func (u *UI) ShowAllNotifications() {
 	u.PrintNotifications(len(u.notifications), u.notifications)
     u.muPrint.Unlock()
 }
-
-// notifications := ui.NewUI(N_NOTIFICATIONS)
-// options := []string{ "Siguiente Mision", "Estado Mercenarios", "Historial Notificaciones" } 
-// notifications.ChangeOptions(options)

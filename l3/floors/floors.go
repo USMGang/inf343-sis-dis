@@ -16,7 +16,6 @@ var (
 
 type Server struct {
 	UnimplementedFloorsServiceServer
-	Quit               chan struct{}
 	NMercenaries       int
 	CurrentMercenaries int
 	Wait               chan bool
@@ -30,6 +29,18 @@ type Server struct {
 }
 
 // ================== Auxiliares ==================
+func (s *Server) InitServer(n_mercenaries int) {
+    s.NMercenaries = n_mercenaries
+    s.CurrentMercenaries = 0
+
+    s.Cond = sync.NewCond(&s.Mutex)
+    s.Wait = make(chan bool, n_mercenaries)
+
+    s.Dosh = dosh.DoshBank{}
+    s.Dosh.InitDoshBank()
+}
+
+
 func (s *Server) waitMercenaries(id int, floor int){
     s.MercenariesMutex.Lock()
     s.CurrentMercenaries++

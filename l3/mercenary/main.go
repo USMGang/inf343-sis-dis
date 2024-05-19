@@ -14,7 +14,7 @@ var (
     get_answer = make(chan bool)
     get_choice = make(chan bool)
 
-    notifications = ui.NewUI(g.WIDTH, g.N_NOTIFICATIONS)
+    notifications = ui.NewUI(g.N_NOTIFICATIONS)
 )
 
 func main() {
