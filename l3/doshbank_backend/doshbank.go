@@ -34,7 +34,6 @@ type Signal struct {
 	Floor int `json:"floor"`
 }
 
-
 // ================== gRPC ==================
 func (s *DoshBank) GetCurrentReward(ctx context.Context, request *GetCurrentRewardRequest) (*GetCurrentRewardResponse, error) {
     return &GetCurrentRewardResponse{Reward: int32(s.Reward)}, nil

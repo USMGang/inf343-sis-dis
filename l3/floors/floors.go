@@ -4,9 +4,12 @@ import (
 	"fmt"
 	dosh "l3/doshbank_backend"
 	u "l3/ui"
+    g "l3/globals"
 	"math/rand"
+	"os"
 	"sync"
 
+	"github.com/joho/godotenv"
 	"golang.org/x/net/context"
 )
 
@@ -29,7 +32,7 @@ type Server struct {
 }
 
 // ================== Auxiliares ==================
-func (s *Server) InitServer(ip string, port string, n_mercenaries int) {
+func (s *Server) InitServer(n_mercenaries int) {
     s.NMercenaries = n_mercenaries
     s.CurrentMercenaries = 0
 
@@ -37,7 +40,13 @@ func (s *Server) InitServer(ip string, port string, n_mercenaries int) {
     s.Wait = make(chan bool, n_mercenaries)
 
     s.Dosh = dosh.DoshBank{}
-    s.Dosh.InitDoshBank(ip, port)
+
+    err := godotenv.Load()
+    g.FailOnError(err, "Error al cargar el archivo .env")
+
+    rabbitHost := os.Getenv("RABBITMQ_HOST")
+    rabbitPort := os.Getenv("RABBITMQ_PORT")
+    s.Dosh.InitDoshBank(rabbitHost, rabbitPort)
 }
 
 

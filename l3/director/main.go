@@ -25,20 +25,17 @@ func main(){
     err := godotenv.Load()
     g.FailOnError(err, "Error al cargar el archivo .env")
 
-    rabbitHost := os.Getenv("RABBITMQ_HOST")
-    rabbitPort := os.Getenv("RABBITMQ_PORT")
-
     doshHost := os.Getenv("DOSHBANK_HOST")
     doshPort := os.Getenv("DOSHBANK_PORT")
 
     directorHost := os.Getenv("DIRECTOR_HOST")
     directorPort := os.Getenv("DIRECTOR_PORT")
 
-    s.InitServer(rabbitHost, rabbitPort, N_MERCENARIES)
+    s.InitServer(N_MERCENARIES)
     defer s.Dosh.Conn.Close()
     defer s.Dosh.Ch.Close()
 
-    // fs.initDoshbank(rabbitHost, rabbitHost)
+    fs.initDoshbank(doshHost, doshPort)
 
     s.Ui = u.NewUI(g.N_NOTIFICATIONS)
     s.Ui.ChangeOptions(g.DIRECTOR_PROMPT, g.DIRECTOR_OPTIONS)
@@ -46,7 +43,6 @@ func main(){
     showInterface()
 
     fs.setListener(directorHost, directorPort, &s)
-    fs.setListener(doshHost, doshPort, &s)
     // TODO: LE falta el listener pal wea del NameNode
 
     // Interfaz del director
