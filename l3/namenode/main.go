@@ -9,26 +9,29 @@ import (
 	"strconv"
 
 	"google.golang.org/grpc"
+	"github.com/joho/godotenv"
 )
 
 func main(){
 	n_mercenaries, _:= strconv.Atoi(os.Args[1])
-    ip_conn := fmt.Sprintf("%s:%s", os.Args[2], "8070")
-
-    ips := make([]string, 3)
-    for i := 0; i < 3; i++ {
-        ips[i] = os.Args[3+i]
-    }
 
     // ================== Inicializar el servidor ==================
+    err := godotenv.Load()
+    g.FailOnError(err, "Error al cargar el archivo .env")
+
+    namenodeHost := os.Getenv("NAMENODE_HOST")
+    namenodePort := os.Getenv("NAMENODE_PORT")
+
+    ip_conn := fmt.Sprintf("%s:%s", namenodeHost, namenodePort)
     lis, err := net.Listen("tcp", ip_conn)
     g.FailOnError(err, fmt.Sprintf("Error, no se pudo establece el listener en: %s", ip_conn))
 
+    fmt.Println("Servidor gRPC iniciado en: ", ip_conn)
+
     s := namenode.Server{}
-    s.InitServer(ips, n_mercenaries)
+    s.InitServer(n_mercenaries)
     grpcServer := grpc.NewServer()
 
-    fmt.Println("Servidor gRPC iniciado en: ", ip_conn)
 
     namenode.RegisterNamenodeServiceServer(grpcServer, &s)
 

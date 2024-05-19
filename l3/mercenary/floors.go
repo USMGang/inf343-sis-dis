@@ -6,6 +6,7 @@ import (
 	d "l3/doshbank_backend"
 	f "l3/floors"
 	g "l3/globals"
+	n "l3/namenode_backend"
 	"math/rand"
 	"os"
 
@@ -21,6 +22,10 @@ type FloorsServers struct {
 	// ================== Director ==================
 	DirectorConn *grpc.ClientConn
 	Director     f.FloorsServiceClient
+
+	// ================== Director ==================
+	NameNodeConn *grpc.ClientConn
+	NameNode     n.NamenodeServiceClient
 
 	// ================== Doshbank ==================
 	DoshbankConn *grpc.ClientConn
@@ -46,6 +51,16 @@ func (s *FloorsServers) initDirector(ip string, port string) {
 
 	s.DirectorConn = conn
 	s.Director = f.NewFloorsServiceClient(conn)
+}
+
+func (s *FloorsServers) initNameNode(ip string, port string) {
+	ip_conn := fmt.Sprintf("%s:%s", ip, port)
+	conn, err := grpc.NewClient(ip_conn, grpc.WithTransportCredentials(insecure.NewCredentials()))
+
+	g.FailOnError(err, "Error, no se pudo establecer comunicación con el director")
+
+	s.NameNodeConn = conn
+	s.NameNode = n.NewNamenodeServiceClient(conn)
 }
 
 func (s *FloorsServers) initDoshbank(ip string, port string) {
@@ -126,6 +141,11 @@ func (s *FloorsServers) floor1() {
 	s.getAnswer("Seleccione el arma que desea usar...", 3)
 	notifications.AddNotification(fmt.Sprintf("Arma seleccionada: %s", weapons[choice-1]))
 
+    // === Mandar la seleccion a NameNode ===
+    request_save := n.SaveStepRequest{ Id: int32(s.Id), Floor: 1, Steps: []string{weapons[choice-1]} }
+    _, err := s.NameNode.SaveStep(context.Background(), &request_save)
+    g.FailOnError(err, "Error, no se pudo guardar el paso")
+
 	// Mandar el arma elegida y esperar el resultado
 	request_results := f.Floor1ResultsRequest{Id: int32(s.Id), SelectedWeapon: int32(choice), RandNumber: int32(rand.Intn(101))}
 	response_results, err := s.Director.Floor1(context.Background(), &request_results)
@@ -159,6 +179,11 @@ func (s *FloorsServers) floor2() {
 	path_response, err := s.Director.Floor2(context.Background(), &path_request)
 	g.FailOnError(err, "Error, no se pudo recibir el camino")
 
+    // === Mandar la seleccion a NameNode ===
+    request_save := n.SaveStepRequest{ Id: int32(s.Id), Floor: 2, Steps: []string{string(rune(choice))} }
+    _, err = s.NameNode.SaveStep(context.Background(), &request_save)
+    g.FailOnError(err, "Error, no se pudo guardar el paso")
+
 	notifications.AddNotification(path_response.Message)
 
 	// === Verificar si el mercenario fue traicionado ===
@@ -175,16 +200,25 @@ func (s *FloorsServers) floor3() {
 	n_good_tries := 0
 	var rand_number int
 
+    var choices = []string{}
 	notifications.AddNotification("Entrando al piso 3")
 	for i := 1; i <= 5; i++ {
 		rand_number = rand.Intn(16) + 1
+        choices = append(choices, fmt.Sprintf("%d", rand_number))
 		notifications.AddNotification(fmt.Sprintf("Intento %d: %d", i, rand_number))
 		tries_request := f.Floor3Try{Id: int32(s.Id), NTries: int32(i), NGoodTries: int32(n_good_tries), RandNumber: int32(rand_number)}
 		tries_response, err := s.Director.Floor3(context.Background(), &tries_request)
 		g.FailOnError(err, "Error, no se pudo realizar la ronda")
 
+
+
 		n_good_tries = int(tries_response.NGoodTries)
 	}
+
+    // === Mandar la seleccion a NameNode ===
+    request_save := n.SaveStepRequest{ Id: int32(s.Id), Floor: 2, Steps: choices }
+    _, err := s.NameNode.SaveStep(context.Background(), &request_save)
+    g.FailOnError(err, "Error, no se pudo guardar el paso")
 
 	// === Revisar el resultado de las rondas ===
 	floor3_request := f.Floor3ResultsRequest{Id: int32(s.Id), NGoodTries: int32(n_good_tries)}

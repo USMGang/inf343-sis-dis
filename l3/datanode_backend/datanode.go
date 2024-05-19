@@ -19,13 +19,13 @@ type Server struct {
 
 func (s *Server) SaveStep(ctx context.Context, request *SaveStepRequest) (*SaveStepResponse, error) {
     s.mutex.Lock()
-    name := fmt.Sprintf("datanode%d/%s_%d.txt", s.Id, g.GetName(int(request.Id)), request.Floor)
+    name := fmt.Sprintf("txt/datanode%d/%s_%d.txt", s.Id, g.GetName(int(request.Id)), request.Floor)
 
-    file, err := os.OpenFile(name, os.O_APPEND|os.O_WRONLY, 0644)
-    g.FailOnError(err, "Fallo al abrir el archivo")
-    defer file.Close()
+	file, err := os.Create(name)
+	g.FailOnError(err, "Fallo al crear el archivo")
+	defer file.Close()
 
-
+    fmt.Println(request.Steps)
     for _, step := range request.Steps {
         _, err = file.WriteString(fmt.Sprintf("* %s\n", step))
         g.FailOnError(err, "Fallo al escribir en el archivo")
@@ -37,7 +37,7 @@ func (s *Server) SaveStep(ctx context.Context, request *SaveStepRequest) (*SaveS
 
 func (s *Server) GetIdStepts(ctx context.Context, request *GetIdSteptsRequest) (*GetIdSteptsResponse, error) {
     s.mutex.Lock()
-    name := fmt.Sprintf("datanode%d/%s_%d.txt", s.Id, g.GetName(int(request.Id)), request.Floor)
+    name := fmt.Sprintf("txt/datanode%d/%s_%d.txt", s.Id, g.GetName(int(request.Id)), request.Floor)
 
     file, err := os.OpenFile(name, os.O_APPEND|os.O_WRONLY, 0644)
     g.FailOnError(err, "Fallo al abrir el archivo")

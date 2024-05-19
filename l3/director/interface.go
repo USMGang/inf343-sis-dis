@@ -40,7 +40,7 @@ func showInterface(){
             // Mercenarios
             case 2:
                 request_reward := dosh.GetCurrentRewardRequest{}
-                response_reward, err := fs.Doshbank.GetCurrentReward(context.Background(), &request_reward)
+                response_reward, err := s.Dosh.GetCurrentReward(context.Background(), &request_reward)
                 g.FailOnError(err, "Error, no se pudieron recibir las opciones")
 
                 s.Ui.AddNotification(fmt.Sprintf("[Director] Recompensa actual: %d", response_reward.Reward))

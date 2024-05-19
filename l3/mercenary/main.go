@@ -5,6 +5,8 @@ import (
     ui "l3/ui"
 	"os"
 	"strconv"
+
+    "github.com/joho/godotenv"
 )
 
 var (
@@ -24,10 +26,25 @@ func main() {
 	player, err := strconv.Atoi(os.Args[1])
 	g.FailOnError(err, "Error, no se pudo recibir el tipo de jugador")
 
+    err = godotenv.Load()
+    g.FailOnError(err, "Error al cargar el archivo .env")
+
+
+    directorHost := os.Getenv("DIRECTOR_HOST")
+    directorPort := os.Getenv("DIRECTOR_PORT")
+
+    doshHost := os.Getenv("DOSHBANK_HOST")
+    doshPort := os.Getenv("DOSHBANK_PORT")
+
+    namenodeHost := os.Getenv("NAMENODE_HOST")
+    namenodePort := os.Getenv("NAMENODE_PORT")
+
+
 	// Administrar gestion con el director 
     server := FloorsServers{}
-    server.initDirector("localhost", "8080")
-    server.initDoshbank("localhost", "8081")
+    server.initDirector(directorHost, directorPort)
+    server.initNameNode(namenodeHost, namenodePort)
+    server.initDoshbank(doshHost, doshPort)
     server.setPlayer(player)
 
     // Dejar la señal para cuando el mercenario muera

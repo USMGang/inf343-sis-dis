@@ -41,9 +41,10 @@ func (s *DoshBank) GetCurrentReward(ctx context.Context, request *GetCurrentRewa
 }
 
 // ================== RabbitMQ ==================
-func (d *DoshBank) InitDoshBank() {
+func (d *DoshBank) InitDoshBank(ip string, port string) {
 	var err error
-	d.Conn, err = amqp.Dial("amqp://guest:guest@localhost:5672/")
+    ip_conn := fmt.Sprintf("amqp://guest:guest@%s:%s/", ip, port)
+    d.Conn, err = amqp.Dial(ip_conn)
 	g.FailOnError(err, "Error al conectar con RabbitMQ")
 
 	d.Ch, err = d.Conn.Channel()

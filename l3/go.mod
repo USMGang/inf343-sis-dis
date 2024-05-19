@@ -3,6 +3,7 @@ module l3
 go 1.21.1
 
 require (
+	github.com/joho/godotenv v1.5.1
 	github.com/streadway/amqp v1.1.0
 	golang.org/x/net v0.22.0
 	google.golang.org/grpc v1.64.0

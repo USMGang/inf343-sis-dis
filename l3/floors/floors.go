@@ -29,7 +29,7 @@ type Server struct {
 }
 
 // ================== Auxiliares ==================
-func (s *Server) InitServer(n_mercenaries int) {
+func (s *Server) InitServer(ip string, port string, n_mercenaries int) {
     s.NMercenaries = n_mercenaries
     s.CurrentMercenaries = 0
 
@@ -37,7 +37,7 @@ func (s *Server) InitServer(n_mercenaries int) {
     s.Wait = make(chan bool, n_mercenaries)
 
     s.Dosh = dosh.DoshBank{}
-    s.Dosh.InitDoshBank()
+    s.Dosh.InitDoshBank(ip, port)
 }
 
 
