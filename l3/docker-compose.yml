@@ -25,7 +25,58 @@ services:
     networks:
       - mynetwork
 
+  datanode1:
+    build:
+      context: .
+      dockerfile: datanode/Dockerfile
+    container_name: datanode
+    ports:
+      - '${DATANODE1_PORT}:${DATANODE1_PORT}'
+    env_file:
+      - .env
+    networks:
+      - mynetwork
+    command: ["/datanode","1"]
+
+  datanode2:
+    build:
+      context: .
+      dockerfile: datanode/Dockerfile
+    container_name: datanode
+    ports:
+      - '${DATANODE2_PORT}:${DATANODE2_PORT}'
+    env_file:
+      - .env
+    networks:
+      - mynetwork
+    command: ["/datanode","2"]
+
+  datanode3:
+    build:
+      context: .
+      dockerfile: datanode/Dockerfile
+    container_name: datanode
+    ports:
+      - '${DATANODE3_PORT}:${DATANODE3_PORT}'
+    env_file:
+      - .env
+    networks:
+      - mynetwork
+    command: ["/datanode","3"]
+
+  namenode:
+    build:
+      context: .
+      dockerfile: namenode/Dockerfile
+    container_name: namenode
+    ports:
+      - '${NAMENODE_PORT}:${NAMENODE_PORT}'
+    env_file:
+      - .env
+    networks:
+      - mynetwork
 
 networks:
   mynetwork:
     driver: bridge
+
