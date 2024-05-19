@@ -4,6 +4,7 @@ import (
 	"fmt"
 	g "l3/globals"
 	u "l3/ui"
+	"os"
 	sync "sync"
 
 	"encoding/json"
@@ -91,16 +92,20 @@ func (d *DoshBank) Consume() {
 }
 
 func (d *DoshBank) HandleDeadMercenary() {
+    file, err := os.OpenFile("txt/doshbank.txt", os.O_APPEND|os.O_WRONLY, 0644)
+    g.FailOnError(err, "Fallo al abrir el archivo")
+    defer file.Close()
+
 	for s := range d.msgs {
 		var signal Signal
-		err := json.Unmarshal(s.Body, &signal)
+		err = json.Unmarshal(s.Body, &signal)
 		g.FailOnError(err, "Error al transformar el mensaje a JSON")
 
         d.mu.Lock()
 		d.Reward += g.REWARD_BONUS
-        d.Ui.AddNotification(fmt.Sprintf("Mercenario %d ha muerto en el piso %d - Botin actual: %d", signal.Id, signal.Floor, d.Reward))
+        d.Ui.AddNotification(fmt.Sprintf("%s ha muerto en el piso %d - Botin actual: %d", g.GetName(signal.Id), signal.Floor, d.Reward))
+        _, err = file.WriteString(fmt.Sprintf("%s %d %d\n", g.GetName(signal.Id), signal.Floor, d.Reward))
+        g.FailOnError(err, "Fallo al escribir en el archivo")
         d.mu.Unlock()
-
-		// TODO: Crear el archivo con los datos de signal y la reward
 	}
 }

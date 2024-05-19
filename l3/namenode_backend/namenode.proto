@@ -1,0 +1,25 @@
+syntax = "proto3";
+package namenode_backend;
+option go_package = "namenode_backend/";
+
+message SaveStepRequest {
+    int32 id = 1;
+    int32 floor = 2;
+    repeated string steps = 3;
+}
+
+message SaveStepResponse { }
+
+message GetIdSteptsRequest {
+    int32 id = 1;
+    int32 floor = 2;
+}
+
+message GetIdSteptsResponse {
+    repeated string steps = 1;
+}
+
+service NamenodeService {
+    rpc SaveStep(SaveStepRequest) returns (SaveStepResponse) {}
+    rpc GetIdStepts(GetIdSteptsRequest) returns (GetIdSteptsResponse) {}
+}

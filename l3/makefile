@@ -23,6 +23,7 @@ rabbit:
 	docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 
 clear:
+	# TODO: Agregar que borre todos los .txt
 	./bots.sh -1
 
 test:
@@ -42,6 +43,12 @@ proto:
 
 proto2:
 	protoc -I=. --go_out=. --go-grpc_out=. doshbank_backend/doshbank.proto
+
+proto3:
+	protoc -I=. --go_out=. --go-grpc_out=. namenode_backend/namenode.proto
+
+proto4:
+	protoc -I=. --go_out=. --go-grpc_out=. datanode_backend/datanode.proto
 
 # docker: proto
 # 	sudo docker build -t lab2_super_tierra .

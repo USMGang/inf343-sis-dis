@@ -15,6 +15,9 @@ var (
 
     DIRECTOR_PROMPT = "Elige una opción: "
     DIRECTOR_OPTIONS = []string{ "Continuar Mision", "Mercenarios", "Historial",  "Salir" }
+
+    MERCENARIES_NAMES = []string{"Reverend David", "Ana Larive", "D.A.R", `Donovan "Bulldog" Neal`, "Mr.Foster", "Hayato Tanaka", "Rae Higgens" }
+
 )
 
 func FailOnError(err error, msg string) {
@@ -23,4 +26,6 @@ func FailOnError(err error, msg string) {
 	}
 }
 
-// TODO: Agregar una funcion para obtener el nombre segun el id del wea
+func GetName(id int) string {
+    return MERCENARIES_NAMES[id-1]
+}

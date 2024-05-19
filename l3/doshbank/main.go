@@ -3,15 +3,22 @@ package main
 import (
 	d "l3/doshbank_backend"
 	g "l3/globals"
-    u "l3/ui"
+	u "l3/ui"
 	"net"
+	"os"
 
 	"google.golang.org/grpc"
 )
 
 func main(){
+    // ================== Archivo ==================
+    file, err := os.Create("txt/doshbank.txt")
+    g.FailOnError(err, "Fallo al crear el archivo")
+    file.Close()
+
     // ================== RabbitMQ ==================
     dosh := d.DoshBank{}
+    // TODO: Contolar esto por args
     dosh.InitDoshBank()
 	defer dosh.Conn.Close()
 	defer dosh.Ch.Close()
@@ -25,6 +32,7 @@ func main(){
     dosh.Ui.AddNotification("[DoshBank] Iniciando el doshbank...")
 
     // ================== gRPC ==================
+    // TODO: Contolar esto por args
     lis, err := net.Listen("tcp", ":8081")
     g.FailOnError(err, "Fallo al escuchar el puerto 8081")
 
