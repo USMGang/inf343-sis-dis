@@ -34,9 +34,15 @@ build_director:
 director: build_director
 	docker compose up director
 
-doshbank: build
-	docker start rabbitmq
-	./$(BIN_FOLDER)/doshbank
+# doshbank: build
+# 	docker start rabbitmq
+# 	./$(BIN_FOLDER)/doshbank
+
+build_doshbank:
+	docker compose build doshbank
+
+doshbank: build_doshbank
+	docker compose up doshbank
 
 namenode: build
 	./$(BIN_FOLDER)/namenode $(N)
