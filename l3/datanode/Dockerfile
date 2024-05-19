@@ -14,4 +14,4 @@ FROM scratch
 COPY --from=builder /app/datanode /datanode
 
 
-CMD ["/namenode"]
+CMD ["/datanode"]
