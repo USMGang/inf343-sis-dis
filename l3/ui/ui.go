@@ -45,7 +45,7 @@ func NewUI(maxNotifications int) UI {
     )
 
 	return UI{
-		Width:             150,
+		Width:             g.WIDTH,
         prompt:            "",
 		options:           []string{},
 		maxNotifications:  maxNotifications,

@@ -51,7 +51,7 @@ func (s *FloorsServers) initDirector(ip string, port string) {
 func (s *FloorsServers) initDoshbank(ip string, port string) {
 	ip_conn := fmt.Sprintf("%s:%s", ip, port)
 	conn, err := grpc.NewClient(ip_conn, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	g.FailOnError(err, "Error, no se pudo establecer comunicación con el director")
+	g.FailOnError(err, "Error, no se pudo establecer comunicación con el doshbank")
 
 	s.DoshbankConn = conn
 	s.Doshbank = d.NewDoshBankClient(conn)

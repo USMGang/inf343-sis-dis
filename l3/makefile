@@ -10,12 +10,11 @@ bot: build_mercenary
 	./mercenary/mercenary 0
 
 build_director:
-	cd director
-	go build -o director
+	go build -o director/director director/main.go director/server.go director/interface.go
 
-director:
+director: build_director
 	docker start rabbitmq
-	./director/director $(N_MERCENARIES)
+	./director/director $(N)
 
 doshbank:
 	go run doshbank/main.go

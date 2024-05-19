@@ -15,7 +15,7 @@ func showInterface(){
 
         for {
             // Obtener imput del usuario
-            var choice = s.Ui.GetInterfaceChoice()
+            choice = s.Ui.GetInterfaceChoice()
 
             switch choice {
 

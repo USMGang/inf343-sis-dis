@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 
@@ -11,8 +10,9 @@ import (
 )
 
 var (
-    s f.Server
-    fs FloorsServers
+    choice = 0
+    s = f.Server{}
+    fs = FloorsServers{}
     quit = make(chan bool)
 )
 
@@ -20,21 +20,20 @@ func main(){
     N_MERCENARIES, _ := strconv.Atoi(os.Args[1])
 
     // ================== Inicializar el servidor ==================
-    s := f.Server{}
+
     s.InitServer(N_MERCENARIES)
-
-    s.Ui = u.NewUI(g.N_NOTIFICATIONS)
-    fmt.Printf("equide: %d\n", s.Ui.Width)
-    s.Ui.ChangeOptions(g.DIRECTOR_PROMPT, g.DIRECTOR_OPTIONS)
-    showInterface()
-
     defer s.Dosh.Conn.Close()
     defer s.Dosh.Ch.Close()
 
-
-    fs := FloorsServers{}
-    fs.setListener("localhost", "8080", &s)
     fs.initDoshbank("localhost", "8081")
+
+    s.Ui = u.NewUI(g.N_NOTIFICATIONS)
+    s.Ui.ChangeOptions(g.DIRECTOR_PROMPT, g.DIRECTOR_OPTIONS)
+    s.Ui.InitInterfaceChoice()
+    showInterface()
+
+    fs.setListener("localhost", "8080", &s)
+
 
     // Interfaz del director
     go func(){

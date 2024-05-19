@@ -26,7 +26,7 @@ fi
 
 WINDOWS_NAME="director"
 tmux new-window -t $CURRENT_SESSION -n $WINDOWS_NAME -c $DIR -S
-tmux send-keys -t $CURRENT_SESSION:$WINDOWS_NAME "make director N_MERCENARIES=$nMercenaries" C-m
+tmux send-keys -t $CURRENT_SESSION:$WINDOWS_NAME "make director N=$nMercenaries" C-m
 
 WINDOWS_NAME="doshbank"
 tmux new-window -t $CURRENT_SESSION -n $WINDOWS_NAME -c $DIR -S
