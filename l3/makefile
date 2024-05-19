@@ -43,13 +43,30 @@ build_doshbank:
 	docker compose build doshbank
 
 doshbank: build_doshbank
+	docker compose down doshbank
 	docker compose up doshbank
 
-namenode: build
-	./$(BIN_FOLDER)/namenode $(N)
 
-datanode: build
-	./$(BIN_FOLDER)/datanode $(ID)
+build_namenode:
+	docker compose build namenode
+
+namenode: build_namenode
+	docker compose down namenode
+	docker compose up namenode
+
+
+build_datanode:
+	docker compose build datanode$(ID)
+
+datanode: build_datanode
+	docker compose down datanode$(ID)
+	docker compose up datanode$(ID)
+
+# namenode: build
+# 	./$(BIN_FOLDER)/namenode $(N)
+#
+# datanode: build
+# 	./$(BIN_FOLDER)/datanode $(ID)
 
 install_rabbit:
 	docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
@@ -58,7 +75,7 @@ clear:
 	rm -rf bin/*
 	rm -rf txt/*.txt
 	rm -rf txt/**/*.txt
-	./bots.sh -1
+	# ./bots.sh -1
 
 test:
 	make clear

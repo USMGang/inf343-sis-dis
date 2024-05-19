@@ -6,6 +6,8 @@ services:
       context: .
       dockerfile: director/Dockerfile
     container_name: director
+    env_file:
+      - '.env'
     ports:
       - '8080:8080'
     networks:
