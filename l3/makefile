@@ -32,6 +32,7 @@ build_director:
 	docker compose build director
 
 director: build_director
+	docker compose down director
 	docker compose up director
 
 # doshbank: build

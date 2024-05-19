@@ -3,6 +3,7 @@ FROM golang:1.21.1 AS builder
 WORKDIR /app
 
 COPY .. .
+COPY ../.env .
 
 RUN go mod download
 # RUN go build -o director director/main.go director/server.go director/interface.go

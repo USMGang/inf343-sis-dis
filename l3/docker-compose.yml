@@ -7,9 +7,7 @@ services:
       dockerfile: director/Dockerfile
     container_name: director
     ports:
-      - '${DIRECTOR_PORT}:${DIRECTOR_PORT}'
-    env_file:
-      - ./.env
+      - '8080:8080'
     networks:
       - mynetwork
 
