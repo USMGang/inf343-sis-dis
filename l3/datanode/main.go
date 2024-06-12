@@ -8,7 +8,6 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 )
 
@@ -16,10 +15,22 @@ func main(){
     id, err := strconv.Atoi(os.Args[1])
     g.FailOnError(err, "Error al obtener el id del datanode")
 
-    err = godotenv.Load()
-    g.FailOnError(err, "Error al cargar el archivo .env")
-    host := os.Getenv(fmt.Sprintf("DATANODE%d_HOST", id))
-    port := os.Getenv(fmt.Sprintf("DATANODE%d_PORT", id))
+    var host, port string
+    switch id {
+    case 1:
+        host = "10.35.169.82"
+        port = "8071"
+    case 2:
+        host = "10.35.169.80"
+        port = "8072"
+    case 3:
+        host = "10.35.169.79"
+        port = "8073"
+    default:
+        host = "10.35.169.82"
+        port = "8071"
+    }
+
     ip_conn := fmt.Sprintf("%s:%s", host, port)
 
     // ================== Inicializar el servidor ==================

@@ -5,13 +5,17 @@ WORKDIR /app
 COPY .. .
 
 RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server namenode/main.go namenode/server.go namenode/interface.go
+
+RUN mkdir -p /app/txt /app/txt/datanode1 /app/txt/datanode2 /app/txt/datanode3
+
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server namenode/main.go
 	
 ENV GOPATH=/app
 
 FROM scratch
 
 COPY --from=builder /app/server /server
+COPY --from=builder /app/txt /app/txt
 
 
 CMD ["/server", "8"]

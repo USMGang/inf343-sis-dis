@@ -8,7 +8,6 @@ import (
 	"os"
 	"sync"
 
-	"github.com/joho/godotenv"
 	"golang.org/x/net/context"
 	grpc "google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -59,12 +58,21 @@ func (s *Server) InitServer(n_mercenaries int) {
 	ips := make([]string, 3)
 	ports := make([]string, 3)
 
-	err = godotenv.Load()
-	g.FailOnError(err, "Error al cargar el archivo .env")
-
 	for i := 0; i < 3; i++ {
-		ips[i] = os.Getenv(fmt.Sprintf("DATANODE%d_HOST", i+1))
-		ports[i] = os.Getenv(fmt.Sprintf("DATANODE%d_PORT", i+1))
+		switch i+1 {
+		case 1:
+			ips[i] = "10.35.169.82"
+			ports[i] = "8071"
+		case 2:
+			ips[i] = "10.35.169.80"
+			ports[i] = "8072"
+		case 3:
+			ips[i] = "10.35.169.79"
+			ports[i] = "8073"
+		default:
+			ips[i] = "10.35.169.82"
+			ports[i] = "8071"
+		}
 	}
 
 	s.DataNodes = make([]DataNode, 3)

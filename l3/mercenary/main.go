@@ -5,8 +5,6 @@ import (
     ui "l3/ui"
 	"os"
 	"strconv"
-
-    "github.com/joho/godotenv"
 )
 
 var (
@@ -26,18 +24,14 @@ func main() {
 	player, err := strconv.Atoi(os.Args[1])
 	g.FailOnError(err, "Error, no se pudo recibir el tipo de jugador")
 
-    err = godotenv.Load()
-    g.FailOnError(err, "Error al cargar el archivo .env")
+    namenodeHost := "10.35.169.81"
+    namenodePort := "8070"
 
+    doshHost := "10.35.169.80"
+    doshPort := "8081"
 
-    directorHost := os.Getenv("DIRECTOR_HOST")
-    directorPort := os.Getenv("DIRECTOR_PORT")
-
-    doshHost := os.Getenv("DOSHBANK_HOST")
-    doshPort := os.Getenv("DOSHBANK_PORT")
-
-    namenodeHost := os.Getenv("NAMENODE_HOST")
-    namenodePort := os.Getenv("NAMENODE_PORT")
+    directorHost := "10.35.169.79"
+    directorPort := "8080"
 
 
 	// Administrar gestion con el director 

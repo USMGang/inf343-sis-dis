@@ -29,18 +29,18 @@ bot: build
 # 	./$(BIN_FOLDER)/director $(N)
 
 build_director:
-	docker compose build director
+	docker-compose build director
 
 director: build_director
-	docker compose down director
-	docker compose up director
+	docker-compose down director
+	docker-compose up director
 
 # doshbank: build
 # 	docker start rabbitmq
 # 	./$(BIN_FOLDER)/doshbank
 
 build_doshbank:
-	docker compose build doshbank
+	docker-compose build doshbank
 
 doshbank: build_doshbank
 	docker compose down doshbank

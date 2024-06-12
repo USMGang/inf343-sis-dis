@@ -7,21 +7,25 @@ import (
 	u "l3/ui"
 	"net"
 	"os"
+    "log"
 
-	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 )
 
 func main(){
-    // ================== .env ==================
-    err := godotenv.Load()
-    g.FailOnError(err, "Error al cargar el archivo .env")
+    dirPath := "txt"
+    if _, err := os.Stat(dirPath); os.IsNotExist(err) {
+        if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
+            log.Fatalf("Error al crear la carpeta: %v", err)
+        }
+        log.Println("Carpeta creada:", dirPath)
+    }
 
-    rabbitHost := os.Getenv("RABBITMQ_HOST")
-    rabbitPort := os.Getenv("RABBITMQ_PORT")
+    rabbitHost := "10.35.169.80"
+    rabbitPort := "5672"
 
-    doshHost := os.Getenv("DOSHBANK_HOST")
-    doshPort := os.Getenv("DOSHBANK_PORT")
+    doshHost := "10.35.169.80"
+    doshPort := "8081"
 
     // ================== Archivo ==================
     file, err := os.Create("txt/doshbank.txt")

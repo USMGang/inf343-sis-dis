@@ -7,8 +7,6 @@ import (
 	f "l3/floors"
 	g "l3/globals"
 	u "l3/ui"
-
-	"github.com/joho/godotenv"
 )
 
 var (
@@ -22,14 +20,11 @@ func main(){
     N_MERCENARIES, _ := strconv.Atoi(os.Args[1])
 
     // ================== Inicializar el servidor ==================
-    err := godotenv.Load()
-    g.FailOnError(err, "Error al cargar el archivo .env")
+    doshHost := "10.35.169.80"
+    doshPort := "8081"
 
-    doshHost := os.Getenv("DOSHBANK_HOST")
-    doshPort := os.Getenv("DOSHBANK_PORT")
-
-    directorHost := os.Getenv("DIRECTOR_HOST")
-    directorPort := os.Getenv("DIRECTOR_PORT")
+    directorHost := "10.35.169.79"
+    directorPort := "8080"
 
     s.InitServer(N_MERCENARIES)
     defer s.Dosh.Conn.Close()
@@ -43,7 +38,6 @@ func main(){
     showInterface()
 
     fs.setListener(directorHost, directorPort, &s)
-    // TODO: LE falta el listener pal wea del NameNode
 
     // Interfaz del director
     go func(){
