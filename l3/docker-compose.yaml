@@ -29,11 +29,12 @@ services:
       dockerfile: datanode/Dockerfile
     container_name: datanode1
     ports:
-      - "8071:8071"
+      - '${DATANODE1_PORT}:${DATANODE1_PORT}'
+    env_file:
+      - .env
     networks:
       - mynetwork
-    command: ["/server","1"]
-    tty: true
+    command: ["/datanode","1"]
 
   datanode2:
     build:
@@ -41,11 +42,12 @@ services:
       dockerfile: datanode/Dockerfile
     container_name: datanode2
     ports:
-      - "8072:8072"
+      - '${DATANODE2_PORT}:${DATANODE2_PORT}'
+    env_file:
+      - .env
     networks:
       - mynetwork
-    command: ["/server","2"]
-    tty: true
+    command: ["/datanode","2"]
 
   datanode3:
     build:
@@ -53,11 +55,12 @@ services:
       dockerfile: datanode/Dockerfile
     container_name: datanode3
     ports:
-      - "8073:8073"
+      - '${DATANODE3_PORT}:${DATANODE3_PORT}'
+    env_file:
+      - .env
     networks:
       - mynetwork
-    command: ["/server","3"]
-    tty: true
+    command: ["/datanode","3"]
 
   namenode:
     build:
